@@ -8,7 +8,7 @@ public class NonogramManager {
     public static Nonogram createNonogramFromBMP(){
         Nonogram nonogram;
         try{
-            FileInputStream fileReader = new FileInputStream("3colour_basketball.bmp");
+            FileInputStream fileReader = new FileInputStream("elephant.bmp");
 
             byte[] headerSizeBytes = new byte[4];
             fileReader.skip(14); //header size stored 14-17
@@ -33,7 +33,27 @@ public class NonogramManager {
             int bpp = byteArrayToInt(bppBytes);  
             System.err.println("Bits per pixel " + bpp); // Pointer is at 26
 
+            fileReader.getChannel().position(0);
+            fileReader.skip(10);
+            byte[] pixelDataOffsetBinary = new byte[4];
+            fileReader.read(pixelDataOffsetBinary);
+            int pixelDataOffset = byteArrayToInt(pixelDataOffsetBinary);
+            System.err.println("Pixel offset " + pixelDataOffset); // 14
 
+            fileReader.getChannel().position(pixelDataOffset);
+
+            for(int row = width-1; row >= 0; row--){
+                System.err.println(row);
+            }
+
+            nonogram = new Nonogram();
+            // for(int i = 0; i < width; i++){
+            //     for(int z = 0; z < height; z++){
+            //         int[] value = {1};
+            //         nonogram.pixelValues[i][z] = new PixelValue(bpp, value);
+            //     }
+            // }
+            return nonogram;
         }
         catch(IOException exception){
             exception.printStackTrace();
