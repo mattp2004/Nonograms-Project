@@ -1,22 +1,43 @@
 package Nonograms;
 import java.io.*;
+import java.util.Arrays;
 
 public class NonogramManager {
     public Nonogram nonogram;
 
-    public static void createNonogramFromBMP(){
+    public static Nonogram createNonogramFromBMP(){
+        Nonogram nonogram;
         try{
-            FileInputStream fileReader = new FileInputStream("elephant.bmp");
+            FileInputStream fileReader = new FileInputStream("3colour_basketball.bmp");
 
             byte[] headerSizeBytes = new byte[4];
-            fileReader.skip(14); //header size
-            fileReader.read(headerSizeBytes, 0, 4);
-
+            fileReader.skip(14); //header size stored 14-17
+            fileReader.read(headerSizeBytes);
             int headerSize = byteArrayToInt(headerSizeBytes);
-            System.err.println(headerSize);
+
+            System.err.println("Header size is " + headerSize);
+
+            byte[] widthBytes = new byte[4];
+            fileReader.read(widthBytes);
+            int width = byteArrayToInt(widthBytes);
+            System.err.println("Width is " + width);
+
+            byte[] heightBytes = new byte[4];
+            fileReader.read(heightBytes);
+            int height = byteArrayToInt(heightBytes);
+            System.err.println("Height is " + height); // Pointer is at 26
+
+            fileReader.skip(2);
+            byte[] bppBytes = new byte[2];
+            fileReader.read(bppBytes);
+            int bpp = byteArrayToInt(bppBytes);  
+            System.err.println("Bits per pixel " + bpp); // Pointer is at 26
+
+
         }
         catch(IOException exception){
             exception.printStackTrace();
+            return null;
         }
     }
 
