@@ -11,7 +11,7 @@ public class Game {
     }
 
     public void setup(){
-        NonogramManager.createNonogramFromBMP();
+        NonogramManager.createNonogramFromBMP("elephant.bmp");
     }
 
     public static Game getInstance(){
