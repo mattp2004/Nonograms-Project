@@ -3,6 +3,9 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.List;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -17,7 +20,7 @@ public class GridPanel extends JPanel{
 
     Nonogram nonogram;
     JButton[][] buttons;
-    Color[] colours; 
+    ArrayList<Color> colours;
 
     //Creates a border to apply to the buttons
     Border lineBorder = BorderFactory.createLineBorder(Color.BLACK);
@@ -25,6 +28,7 @@ public class GridPanel extends JPanel{
     public GridPanel(Nonogram _nonogram){
         //Instantiates 
         this.nonogram = _nonogram;
+        colours = new ArrayList<Color>();
 
         buttons = new JButton[nonogram.height][nonogram.width];
         JPanel grid = new JPanel(new GridLayout(nonogram.height, nonogram.width));
@@ -74,6 +78,10 @@ public class GridPanel extends JPanel{
 
         //Creates and returns the new colour
         colour = new Color(red,green,blue);
+        Boolean inList = false;
+        if(!colours.contains(colour)){
+            colours.add(colour);
+        }
         return colour;
     }
 
@@ -107,15 +115,23 @@ public class GridPanel extends JPanel{
 
     //Runs everytime a pixel(button) is clicked
     private void pixelClick(JButton button, int y, int x){
-        //To be replaced with proper functionality for interpreting colour. 
+        //Gets the current colour
         Color currentColor = button.getBackground();
-        //Switches pixel between black and white for testing purposes.
-        if(currentColor == Color.black){
-            button.setBackground(Color.white);
+        int colourIndex=0;
+
+        //Finds the index of the current colour 
+        for(int i = 0; i < colours.size(); i++){
+            if(colours.get(i) == currentColor){
+                colourIndex = i;
+            }
         }
-        else{
-            button.setBackground(Color.black);
+        //Incremented colour index and if reached the max it resets to 0
+        colourIndex +=1;
+        if(colourIndex == colours.size()){
+            colourIndex = 0;
         }
+        //Sets the new colour
+        button.setBackground(colours.get(colourIndex));
     }
     
 }
