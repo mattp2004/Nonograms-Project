@@ -85,6 +85,7 @@ public class NonogramManager {
                         System.err.print(values[i]);
                     }
 
+                    
                     pixels[y][x] = new PixelValue(bpp);
                     pixels[y][x].values = values;
 
@@ -97,7 +98,7 @@ public class NonogramManager {
             //Closes file reader
             fileReader.close();
 
-            nonogram = new Nonogram(width,height,pixels);
+            nonogram = new Nonogram(width,height,pixels,bpp);
             return nonogram;
 
         }
