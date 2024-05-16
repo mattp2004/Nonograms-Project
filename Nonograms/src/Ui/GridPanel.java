@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 
@@ -21,14 +22,20 @@ public class GridPanel extends JPanel{
     Nonogram nonogram;
     JButton[][] buttons;
     ArrayList<Color> colours;
+    Color[][] completedPuzzle;
+    Boolean toReset;
 
     //Creates a border to apply to the buttons
     Border lineBorder = BorderFactory.createLineBorder(Color.BLACK);
+    Border incorrectLineBorder = BorderFactory.createLineBorder(Color.RED);
 
     public GridPanel(Nonogram _nonogram){
-        //Instantiates 
+        //Instantiates variables
+        toReset = false;
         this.nonogram = _nonogram;
         colours = new ArrayList<Color>();
+
+        completedPuzzle = new Color[_nonogram.height][nonogram.width];
 
         buttons = new JButton[nonogram.height][nonogram.width];
         JPanel grid = new JPanel(new GridLayout(nonogram.height, nonogram.width));
@@ -78,7 +85,8 @@ public class GridPanel extends JPanel{
 
         //Creates and returns the new colour
         colour = new Color(red,green,blue);
-        Boolean inList = false;
+
+        //If the new colour is not in the list of colours it will add it
         if(!colours.contains(colour)){
             colours.add(colour);
         }
@@ -92,7 +100,10 @@ public class GridPanel extends JPanel{
                 JButton button = new JButton();
                 //Sets colour to white if first bit of the pixel's data starts with a 1 (for testing)
                 Color pixelColour = getColour(nonogram.pixelValues[y][x].values);
-                button.setBackground(pixelColour);
+                completedPuzzle[y][x] = pixelColour;
+                
+                button.setBackground(Color.WHITE);
+
                 //Applies the border to the button
                 button.setBorder(lineBorder);
                 button.setOpaque(true);
@@ -115,6 +126,9 @@ public class GridPanel extends JPanel{
 
     //Runs everytime a pixel(button) is clicked
     private void pixelClick(JButton button, int y, int x){
+        if(toReset){
+            return;
+        }
         //Gets the current colour
         Color currentColor = button.getBackground();
         int colourIndex=0;
@@ -132,6 +146,54 @@ public class GridPanel extends JPanel{
         }
         //Sets the new colour
         button.setBackground(colours.get(colourIndex));
+        buttons[y][x] = button;
+    }
+
+    //Checks to see if the puzzle is correct
+    public Boolean checkCompleted() {
+        //Invalidates check if puzzle has already been checked and needs to be reset.
+        if(toReset){
+            JOptionPane.showMessageDialog(this, "Press reset to retry.");
+            return false;
+        }
+        Boolean completed = true;
+        int correctCells = 0;
+        int blankCells = 0;
+        //Iterates through each pixel and checks if it's colour is as expected.
+        for (int y = 0; y < nonogram.height; y++) {
+            for (int x = 0; x < nonogram.width; x++) {
+                Color buttonColour = buttons[y][x].getBackground();
+                Color expectedColour = completedPuzzle[y][x];
+                //if it is not as expected it sets the puzzle to be not complete and highlights the invalid pixels.
+                if (!buttonColour.equals(expectedColour)) {
+                    completed = false;
+                    buttons[y][x].setBorder(incorrectLineBorder);
+                    buttons[y][x].setBackground(expectedColour);
+                }  
+                else{
+                    //Calculates the number of correct cells out of the number of real cells (excluding blank cells)
+                    if(buttonColour != Color.WHITE){
+                        correctCells +=1;
+                    }
+                    else{
+                        blankCells +=1;
+                    }
+                }
+            }
+        }
+        //Sets the puzzle to have to be reset.
+        toReset = true;
+
+        //Sends the result of the game message to the user.
+        int totalCells = (nonogram.width*nonogram.height) - blankCells;
+        if(completed){
+            JOptionPane.showMessageDialog(this, "Congrats you got "+ correctCells + "/" + totalCells + ". The puzzle is correct.");
+        }
+        else{
+            JOptionPane.showMessageDialog(this, "Incorrect. There are "+ correctCells + "/" + totalCells + " correctly marked cells. Try again.");
+
+        }
+        return completed;
     }
     
 }
