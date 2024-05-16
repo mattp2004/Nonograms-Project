@@ -42,14 +42,10 @@ public class NonogramManager {
             //Total bytes overall including filler (whole image)
             int totalBytes = totalBytesRow * height; 
 
-            //DEBUG
-            System.out.println("[DEBUG] bitsPerPixel: "+ bpp+ ", Width x Height: " + width +"x" + height + ", TotalBytes: " + totalBytes);
-
             PixelValue[][] pixels = new PixelValue[height][width];
             fileReader.getChannel().position(pixelDataOffset);
             //DEBUG
             int count = 0;
-            System.out.print("[DEBUG] Raw bits: "); 
 
             //Iterates through each column
             for(int y = height -1; y >= 0; y--){         
@@ -69,10 +65,6 @@ public class NonogramManager {
                         if(currentBit < 0){
                             currentByte +=1;
                             currentBit = 7;
-                            // This should never be true but after 5 hours of painful testing it somehow can be.
-                            if(currentByte > bytesPerRow){ 
-                                System.out.println("something has gone terribly wrong");
-                            }
                         }
                         //Isolate the specific bit (currentBit)
                         int bit = (currentBytes[currentByte] >> currentBit) &1; 
@@ -80,21 +72,12 @@ public class NonogramManager {
                         currentBit -=1;
                         count +=1; //Debug
                     }
-                    //Debug
-                    for(int i = 0; i < values.length; i++){ 
-                        System.err.print(values[i]);
-                    }
-
                     
                     pixels[y][x] = new PixelValue(bpp);
                     pixels[y][x].values = values;
 
                 }
             }
-            //Debug
-            System.out.println();
-            System.out.println("[DEBUG] Bits CheckSum: "+count + "/" + bpp*width*height); //Debug
-
             //Closes file reader
             fileReader.close();
 
