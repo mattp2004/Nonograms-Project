@@ -15,10 +15,17 @@ public class Game {
     }
 
     public void setup(){
-        nonogram = NonogramManager.createNonogramFromBMP("2colour_elephant.bmp");
-        gameWindow = new GameWindow(nonogram);
-    }
+        String filePath = "";
+        JFileChooser fileChooser = new JFileChooser();
+        int result = fileChooser.showSaveDialog(null);
+        if(result == JFileChooser.APPROVE_OPTION){
+            filePath = fileChooser.getSelectedFile().getAbsolutePath();
+        }        
 
+        nonogram = NonogramManager.createNonogramFromBMP(filePath);
+        gameWindow = new GameWindow(nonogram);
+        
+    }
     public static Game getInstance(){
         return instance;
     }

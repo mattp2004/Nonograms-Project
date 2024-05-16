@@ -1,6 +1,7 @@
 package Ui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -14,10 +15,12 @@ public class BottomPanel extends JPanel {
         JButton checkButton = new JButton("Check");
         checkButton.setPreferredSize(new Dimension(120,60));
         checkButton.addActionListener(e ->window.gridPanel.checkCompleted());
+        checkButton.setBackground(Color.green);
         this.add(checkButton, BorderLayout.CENTER);
 
         JButton resetButton = new JButton("Reset");
         resetButton.setPreferredSize(new Dimension(120,60));
+        resetButton.setBackground(Color.red);
         resetButton.addActionListener(e ->window.gridPanel.resetPuzzle());
         this.add(resetButton, BorderLayout.WEST);
     }
