@@ -12,7 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
-
+import javax.swing.border.LineBorder;
 
 import Nonograms.Nonogram;
 import Nonograms.NonogramManager;
@@ -24,6 +24,7 @@ public class GridPanel extends JPanel{
     ArrayList<Color> colours;
     Color[][] completedPuzzle;
     Boolean toReset;
+    JPanel grid;
 
     //Creates a border to apply to the buttons
     Border lineBorder = BorderFactory.createLineBorder(Color.BLACK);
@@ -38,12 +39,12 @@ public class GridPanel extends JPanel{
         completedPuzzle = new Color[_nonogram.height][nonogram.width];
 
         buttons = new JButton[nonogram.height][nonogram.width];
-        JPanel grid = new JPanel(new GridLayout(nonogram.height, nonogram.width));
+        grid = new JPanel(new GridLayout(nonogram.height, nonogram.width));
 
         createGrid(grid);
         add(grid, BorderLayout.CENTER);
     }
-
+    
     private Color getColour(int[] values){
         Color colour;
 
@@ -147,6 +148,17 @@ public class GridPanel extends JPanel{
         //Sets the new colour
         button.setBackground(colours.get(colourIndex));
         buttons[y][x] = button;
+    }
+
+    public void resetPuzzle(){
+        toReset = false;
+        //Resets the colours of the buttons as well as the border colour.
+        for (int y = 0; y < nonogram.height; y++) {
+            for (int x = 0; x < nonogram.width; x++) {
+                buttons[y][x].setBackground(Color.WHITE); 
+                buttons[y][x].setBorder(lineBorder);
+            }
+        }
     }
 
     //Checks to see if the puzzle is correct

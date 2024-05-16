@@ -15,5 +15,10 @@ public class BottomPanel extends JPanel {
         checkButton.setPreferredSize(new Dimension(120,60));
         checkButton.addActionListener(e ->window.gridPanel.checkCompleted());
         this.add(checkButton, BorderLayout.CENTER);
+
+        JButton resetButton = new JButton("Reset");
+        resetButton.setPreferredSize(new Dimension(120,60));
+        resetButton.addActionListener(e ->window.gridPanel.resetPuzzle());
+        this.add(resetButton, BorderLayout.WEST);
     }
 }
