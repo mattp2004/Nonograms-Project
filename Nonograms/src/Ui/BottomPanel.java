@@ -18,6 +18,7 @@ public class BottomPanel extends JPanel {
         checkButton.setBackground(Color.green);
         this.add(checkButton, BorderLayout.CENTER);
 
+        //Creates a button to reset the puzzle;
         JButton resetButton = new JButton("Reset");
         resetButton.setPreferredSize(new Dimension(120,60));
         resetButton.setBackground(Color.red);
