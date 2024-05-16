@@ -14,7 +14,7 @@ public class Game {
 
     public void setup(){
         //2colour elephant = 24 bpp
-        nonogram = NonogramManager.createNonogramFromBMP("2colour_elephant.bmp");
+        nonogram = NonogramManager.createNonogramFromBMP("3colour_basketball.bmp");
         gameWindow = new GameWindow(nonogram);
     }
 

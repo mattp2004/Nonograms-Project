@@ -2,18 +2,16 @@ package Ui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.List;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
-
 import Nonograms.Nonogram;
 import Nonograms.NonogramManager;
 
@@ -41,10 +39,71 @@ public class GridPanel extends JPanel{
         buttons = new JButton[nonogram.height][nonogram.width];
         grid = new JPanel(new GridLayout(nonogram.height, nonogram.width));
 
-        createGrid(grid);
+        // grid.setBorder(new EmptyBorder(20,20,20,20));
+
+        setLayout(new BorderLayout());
+
+        //Create a new panel which will store all of the column number hints
+        JPanel colNumbersPanel = new JPanel(new GridLayout(1,nonogram.width));
+
+        //Create a new panel which will store all of the column number hints
+        JPanel rowNumbersPanel = new JPanel(new GridLayout(nonogram.height, 1));
+        //Populates the panel with number hints each row.
+        for(int x = 0; x < nonogram.height; x++){
+            rowNumbersPanel.add(getRowNumberHint(x));
+        }
+
+        //Adds the components to the panel.
+        add(colNumbersPanel, BorderLayout.NORTH);
+        add(rowNumbersPanel, BorderLayout.WEST);
         add(grid, BorderLayout.CENTER);
+
+        //Creates the grid
+        createGrid(grid);
     }
     
+    private JPanel getRowNumberHint(int y) {
+        //Creates new panel and assigns flow layout so that all the numbers are added in a horizontal line going right.
+        JPanel colNumbers = new JPanel();
+        colNumbers.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 5));
+
+        //
+        int consecutivePixels = 0;
+        Color previousColour = getColour(nonogram.pixelValues[y][0].values);
+
+        //Iterates through all of the rows.
+        for(int x = 0; x < nonogram.width; x++){
+            Color pixelColour = getColour(nonogram.pixelValues[y][x].values);
+            //If the pixel colour is the same as the previous, increment count
+            if(pixelColour.equals(previousColour)){
+                consecutivePixels +=1;
+            }
+            //If they are not the chain of pixels has ended.
+            else{
+                //If pixel is not blank then add the label of consecutive pixels
+                if(!previousColour.equals(Color.WHITE)){
+                    JLabel label = new JLabel(consecutivePixels +  ", ");
+                    label.setForeground(previousColour);
+                    colNumbers.add(label);
+                }
+                consecutivePixels = 1;
+                previousColour = pixelColour;
+            }
+    
+        }
+        //Adds the consecutive pixels that are not subsequently followed by any others.
+        if(!previousColour.equals(Color.WHITE)){
+            if(consecutivePixels > 0){
+                JLabel label = new JLabel(consecutivePixels + " ");
+                label.setForeground(previousColour);
+                colNumbers.add(label);
+            }
+        }
+        
+        return colNumbers;
+        
+    }
+
     private Color getColour(int[] values){
         Color colour;
 
@@ -116,7 +175,7 @@ public class GridPanel extends JPanel{
 
                 //Calls the clicked function when the listener is activated.
                 button.addActionListener(e -> pixelClick(button, _y, _x));
-                button.setPreferredSize(new Dimension(25, 25));
+                button.setPreferredSize(new Dimension(15, 15));
                 
                 //Assigns and adds the button 
                 buttons[y][x] = button;
