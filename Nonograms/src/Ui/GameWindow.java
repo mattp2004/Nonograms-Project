@@ -13,7 +13,7 @@ public class GameWindow extends JFrame {
     public GameWindow(Nonogram nonogram){
         //Sets the properties of the window
         this.setTitle("Hanjie Puzzle ");
-        this.setSize(600, 600);
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         //Adds the grid panel as a new component of the Jframe

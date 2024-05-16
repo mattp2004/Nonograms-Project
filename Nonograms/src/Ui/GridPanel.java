@@ -7,11 +7,15 @@ import java.awt.GridLayout;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+
 import Nonograms.Nonogram;
 import Nonograms.NonogramManager;
 
@@ -39,19 +43,25 @@ public class GridPanel extends JPanel{
         buttons = new JButton[nonogram.height][nonogram.width];
         grid = new JPanel(new GridLayout(nonogram.height, nonogram.width));
 
-        // grid.setBorder(new EmptyBorder(20,20,20,20));
+        grid.setBorder(new EmptyBorder(0,0,0,40));
 
         setLayout(new BorderLayout());
 
         //Create a new panel which will store all of the column number hints
         JPanel colNumbersPanel = new JPanel(new GridLayout(1,nonogram.width));
+        for(int x = 0; x < nonogram.width; x++){
+            colNumbersPanel.add(getColNumberHint(x));
+        }
 
-        //Create a new panel which will store all of the column number hints
+        //Populates the panel with number hints for each row.
         JPanel rowNumbersPanel = new JPanel(new GridLayout(nonogram.height, 1));
-        //Populates the panel with number hints each row.
         for(int x = 0; x < nonogram.height; x++){
             rowNumbersPanel.add(getRowNumberHint(x));
         }
+
+        //Sets border to align numbers based on width of nonogram
+        colNumbersPanel.setBorder(new EmptyBorder(0,15*nonogram.width,0,2*nonogram.width));
+        rowNumbersPanel.setBorder(new EmptyBorder(0,30,0,0));
 
         //Adds the components to the panel.
         add(colNumbersPanel, BorderLayout.NORTH);
@@ -82,6 +92,48 @@ public class GridPanel extends JPanel{
             else{
                 //If pixel is not blank then add the label of consecutive pixels
                 if(!previousColour.equals(Color.WHITE)){
+                    JLabel label = new JLabel(consecutivePixels +  ",      ");
+                    label.setForeground(previousColour);
+                    colNumbers.add(label);
+                }
+                consecutivePixels = 1;
+                previousColour = pixelColour;
+            }
+    
+        }
+        //Adds the consecutive pixels that are not subsequently followed by any others.
+        if(!previousColour.equals(Color.WHITE)){
+            if(consecutivePixels > 0){
+                JLabel label = new JLabel(consecutivePixels + "       ");
+                label.setForeground(previousColour);
+                colNumbers.add(label);
+            }
+        }
+        
+        return colNumbers;
+    }
+
+    private JPanel getColNumberHint(int x) {
+        //Creates new panel and assigns BoxLayout on the Y axis so the numbers are displayed vertically.
+        JPanel colNumbers = new JPanel();
+        colNumbers.setLayout(new BoxLayout(colNumbers, BoxLayout.Y_AXIS));
+        //Used to avoid floating numbers
+        colNumbers.add(Box.createVerticalGlue());
+
+        int consecutivePixels = 0;
+        Color previousColour = getColour(nonogram.pixelValues[0][x].values);
+
+        //Iterates through all of the columns.
+        for(int y = 0; y < nonogram.height; y++){
+            Color pixelColour = getColour(nonogram.pixelValues[y][x].values);
+            //If the pixel colour is the same as the previous, increment count
+            if(pixelColour.equals(previousColour)){
+                consecutivePixels +=1;
+            }
+            //If they are not the chain of pixels has ended.
+            else{
+                //If pixel is not blank then add the label of consecutive pixels
+                if(!previousColour.equals(Color.WHITE)){
                     JLabel label = new JLabel(consecutivePixels +  ", ");
                     label.setForeground(previousColour);
                     colNumbers.add(label);
@@ -95,13 +147,11 @@ public class GridPanel extends JPanel{
         if(!previousColour.equals(Color.WHITE)){
             if(consecutivePixels > 0){
                 JLabel label = new JLabel(consecutivePixels + " ");
-                label.setForeground(previousColour);
+                label.setForeground(previousColour);                
                 colNumbers.add(label);
             }
         }
-        
         return colNumbers;
-        
     }
 
     private Color getColour(int[] values){
@@ -266,5 +316,4 @@ public class GridPanel extends JPanel{
         }
         return completed;
     }
-    
 }
