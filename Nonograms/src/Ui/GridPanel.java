@@ -60,7 +60,7 @@ public class GridPanel extends JPanel{
         }
 
         //Sets border to align numbers based on width of nonogram
-        colNumbersPanel.setBorder(new EmptyBorder(0,15*nonogram.width,0,2*nonogram.width));
+        colNumbersPanel.setBorder(new EmptyBorder(0,17*nonogram.width,0,2*nonogram.width));
         rowNumbersPanel.setBorder(new EmptyBorder(0,30,0,0));
 
         //Adds the components to the panel.

@@ -44,8 +44,6 @@ public class NonogramManager {
 
             PixelValue[][] pixels = new PixelValue[height][width];
             fileReader.getChannel().position(pixelDataOffset);
-            //DEBUG
-            int count = 0;
 
             //Iterates through each column
             for(int y = height -1; y >= 0; y--){         
@@ -70,7 +68,6 @@ public class NonogramManager {
                         int bit = (currentBytes[currentByte] >> currentBit) &1; 
                         values[i] = bit;
                         currentBit -=1;
-                        count +=1; //Debug
                     }
                     
                     pixels[y][x] = new PixelValue(bpp);
